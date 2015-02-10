@@ -9,6 +9,7 @@ package prueba;
  *
  * @author MiguelAngel
  */
+
 public class Simulador {
 
     /**
@@ -16,6 +17,9 @@ public class Simulador {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        /*int[] arr = new int[10];
+        arr[1] = new Avion;*/
+        
     }
     
 }
