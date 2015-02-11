@@ -9,22 +9,25 @@ package prueba;
  *
  * @author MiguelAngel
  */
-public class Avion {
-    public int max_speed;
-    public int num_people;
-    public boolean tourist;
-    public boolean landed;
+public class Avion extends Dibujable{
+    int speed = 600;
+    int num_people;
     
-    public static void TakeOff(Boolean landed) {
-        if(landed == true){
-            System.out.println("Ya podemos despegar");
-        }else{
-            System.out.println("El avion ya estaba en el aire");
-        }
+    public void TakeOff() {
+        System.out.println("Avion despegando...");
     }
     
-    public static void LandPlane(String resultado) {
-        resultado = "Aterrizaje OK";
-        System.out.println(resultado);
+    public void LandPlane() {
+        System.out.println("Aterrizaje OK");
     }
+    
+    public void PlaneSpeed() {
+        System.out.println("La velocidad del avion es: " + speed);
+    }
+
+    @Override
+    public void Draw() {
+        System.out.println("Dibujando avión...");
+    }
+    
 }

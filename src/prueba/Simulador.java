@@ -16,10 +16,18 @@ public class Simulador {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        /*int[] arr = new int[10];
-        arr[1] = new Avion;*/
-        
+       Pista pistaMain = new Pista();
+       Avion miBoeing = new Avion();
+       
+       pistaMain.Draw();
+       pistaMain.LongPista();
+       pistaMain.EsPrincipal();
+       
+       miBoeing.Draw();
+       miBoeing.TakeOff();
+       miBoeing.PlaneSpeed();
+       miBoeing.LandPlane();
+
     }
     
 }
