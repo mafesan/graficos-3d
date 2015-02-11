@@ -9,12 +9,14 @@ package prueba;
  *
  * @author MiguelAngel
  */
+
 class Pista {
+    int x, y;
     int longitud = 500;
     boolean principal = true;
     
     public void LongPista() {
-        System.out.println("La pista mide: " + longitud);
+        System.out.println("La pista mide: " + longitud + " metros.");
     }
     
     public void EsPrincipal(){
@@ -25,7 +27,7 @@ class Pista {
         }
     }
 
-    void Draw() {
+    public void Draw() {
        System.out.println("Dibujando pista...");
     }
 }

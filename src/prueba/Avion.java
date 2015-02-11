@@ -10,6 +10,7 @@ package prueba;
  * @author MiguelAngel
  */
 public class Avion extends Dibujable{
+    int x, y, z;
     int speed = 600;
     int num_people;
     
@@ -22,7 +23,7 @@ public class Avion extends Dibujable{
     }
     
     public void PlaneSpeed() {
-        System.out.println("La velocidad del avion es: " + speed);
+        System.out.println("La velocidad del avion es: " + speed + " km/h.");
     }
 
     @Override
