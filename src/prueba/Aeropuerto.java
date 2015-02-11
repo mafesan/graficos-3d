@@ -16,8 +16,16 @@ public class Simulador {
      * @param args the command line arguments
      */
 
+    /* Proximos pasos para la práctica:
+     * Falta darle vida al aeropuerto, ejemplo:
+     * bucle que itere y en cada iteracion pasen cosas, como
+     * que los aviones avancen (cambien de posicion) y al llegar
+     * a una en concreto aterricen, y la pista va diciendo si 
+     * hay algun avion en ella.
+     */
     public static void main(String[] args) {
-       Fondo miPaisaje = new Fondo();
+       Fondo 
+       miPaisaje = new Fondo();
        Pista pistaMain = new Pista();
        Pista pista2 = new Pista();
        Torre torreControl = new Torre();
