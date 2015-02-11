@@ -19,8 +19,8 @@ class Pista extends Dibujable{
         System.out.println("La pista mide: " + longitud + " metros.");
     }
     
-    public void EsPrincipal(){
-        if(principal){
+    public void EsPrincipal(String tipo){
+        if(tipo == "Principal"){
              System.out.println("Esta es la pista principal");
         }else{
              System.out.println("Esta es una pista secundaria");

@@ -15,23 +15,32 @@ public class Simulador {
     /**
      * @param args the command line arguments
      */
-    
+
     public static void main(String[] args) {
+       Fondo miPaisaje = new Fondo();
        Pista pistaMain = new Pista();
+       Pista pista2 = new Pista();
        Torre torreControl = new Torre();
        Avion miBoeing = new Avion();
        
        //Dibujamos los elementos
+       miPaisaje.Draw();
        torreControl.Draw();
        pistaMain.Draw();
+       
        miBoeing.Draw();
        
        //Interactuamos con ellos
+       miPaisaje.AddElements();
+       miPaisaje.WeatherNow();
        torreControl.Altura();
        torreControl.Connect();
        
        pistaMain.LongPista();
-       pistaMain.EsPrincipal();
+       pistaMain.EsPrincipal("Principal");
+       
+       pista2.Draw();
+       pista2.EsPrincipal("Otra");
        
        miBoeing.TakeOff();
        miBoeing.PlaneSpeed();
