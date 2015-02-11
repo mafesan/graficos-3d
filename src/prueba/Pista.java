@@ -10,7 +10,7 @@ package prueba;
  * @author MiguelAngel
  */
 
-class Pista {
+class Pista extends Dibujable{
     int x, y;
     int longitud = 500;
     boolean principal = true;
@@ -27,6 +27,7 @@ class Pista {
         }
     }
 
+    @Override
     public void Draw() {
        System.out.println("Dibujando pista...");
     }

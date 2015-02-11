@@ -9,10 +9,11 @@ package prueba;
  *
  * @author MiguelAngel
  */
-class Torre {
+class Torre extends Dibujable{
     int x, y, z;
     int height = 50;
     
+    @Override
     public void Draw() {
        System.out.println("Dibujando torre de control...");
     }
