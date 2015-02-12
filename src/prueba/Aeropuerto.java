@@ -10,7 +10,7 @@ package prueba;
  * @author MiguelAngel
  */
 
-public class Simulador {
+public class Aeropuerto {
 
     /**
      * @param args the command line arguments
