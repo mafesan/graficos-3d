@@ -11,7 +11,7 @@ package prueba;
  */
 class Torre extends Dibujable{
     int x, y, z;
-    int height = 50;
+    int height = 60;
     
     @Override
     public void Draw() {
