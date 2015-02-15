@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package prueba;
 
 /**
@@ -24,8 +25,7 @@ public class Aeropuerto {
      * hay algun avion en ella.
      */
     public static void main(String[] args) {
-       Fondo 
-       miPaisaje = new Fondo();
+       Fondo miPaisaje = new Fondo();
        Pista pistaMain = new Pista();
        Pista pista2 = new Pista();
        Torre torreControl = new Torre();
