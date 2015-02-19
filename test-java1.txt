@@ -1,0 +1,56 @@
+Abajo se muestran todas las preguntas del cuestionario. Tus respuestas están en negrita. Las respuestas correctas están marcadas en verde y las incorrectas en rojo.
+
+1- ¿Cuál es la descripción que crees que define mejor el concepto 'clase' en la programación orientada a objetos?
+Es un concepto similar al de 'array'
+Es un tipo particular de variable
+Es un modelo o plantilla a partir de la cual creamos objetos  <--
+Es una categoria de datos ordenada secuencialmente
+
+2- ¿Qué elementos crees que definen a un objeto?
+Sus cardinalidad y su tipo
+Sus atributos y sus métodos  <--
+La forma en que establece comunicación e intercambia mensajes 
+Su interfaz y los eventos asociados
+
+3- ¿Qué código de los siguientes tiene que ver con la herencia?
+public class Componente extends Producto  <--
+public class Componente inherit Producto
+public class Componente implements Producto
+public class Componente belong to Producto
+
+4- ¿Qué significa instanciar una clase?
+Duplicar una clase
+Eliminar una clase
+Crear un objeto a partir de la clase  <--
+Conectar dos clases entre sí
+
+
+6- ¿Qué es Eclipse?
+Una libreria de Java
+Una versión de Java especial para servidores
+Un IDE para desarrollar aplicaciones  <--
+Ninguna de las anteriores
+
+7- ¿Qué es el bytecode en Java?
+El formato de intercambio de datos
+El formato que obtenemos tras compilar un fuente .java  <--
+Un tipo de variable
+Un depurador de código
+
+8- ¿Qué código asociarías a una Interfaz en Java?
+public class Componente interface Product
+Componente cp = new Componente (interfaz)
+public class Componente implements Printable  <--
+Componente cp = new Componente.interfaz
+
+9- ¿Qué significa sobrecargar (overload) un método?
+Editarlo para modificar su comportamiento
+Cambiarle el nombre dejándolo con la misma funcionalidad
+Crear un método con el mismo nombre pero diferentes argumentos  <--
+Añadirle funcionalidades a un método
+
+10- ¿Qué es una excepción?
+Un error que lanza un método cuando algo va mal  <--
+Un objeto que no puede ser instanciado
+Un bucle que no finaliza
+Un tipo de evento muy utilizado al crear interfaces
