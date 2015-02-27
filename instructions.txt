@@ -1,0 +1,11 @@
+Intructions for ATCSim
+
+1- git clone <url repo>
+2- cd ATCSim
+3- mkdir build
+4- cd build
+5- cmake ..
+6- make 
+
+7a- ./ATCSim
+7b- ./cppgui
