@@ -11,7 +11,7 @@ package firstSteps;
 	import static org.lwjgl.opengl.GL11.*;
 	import static org.lwjgl.system.MemoryUtil.*;
 	 
-	public class Game {
+	public class HelloWorld {
 	 
 	    // We need to strongly reference callback instances.
 	    private GLFWErrorCallback errorCallback;
@@ -112,7 +112,7 @@ package firstSteps;
 	    }
 	 
 	    public static void main(String[] args) {
-	        new Game().run();
+	        new HelloWorld().run();
 	    }
 	 
 	}
