@@ -5,6 +5,13 @@
  */
 package prueba;
 
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+
 /**
  *
  * @author MiguelAngel
@@ -29,6 +36,14 @@ class Pista extends Dibujable{
 
     @Override
     public void Draw() {
-       System.out.println("Dibujando pista...");
-    }
+        System.out.println("Dibujando pista...");
+        glColor3f(0f, 1f, 0f);
+        glBegin(GL_TRIANGLE_STRIP);
+            glVertex3f(-0.4f, -0.8f, 0f);
+            glVertex3f(-0.4f, 0.8f, 0f);
+            glVertex3f(0.4f, 0.8f, 0f);
+            glVertex3f(0.4f, -0.8f, 0f);
+            glVertex3f(-0.4f, -0.8f, 0f);
+        glEnd();
+        }
 }
