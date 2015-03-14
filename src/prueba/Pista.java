@@ -37,13 +37,12 @@ class Pista extends Dibujable{
     @Override
     public void Draw() {
         System.out.println("Dibujando pista...");
-        glColor3f(0f, 1f, 0f);
+        glColor3f(0.1f, 0.1f, 0.1f);
         glBegin(GL_TRIANGLE_STRIP);
             glVertex3f(-0.4f, -0.8f, 0f);
+            glVertex3f(0.4f, -0.8f, 0f);
             glVertex3f(-0.4f, 0.8f, 0f);
             glVertex3f(0.4f, 0.8f, 0f);
-            glVertex3f(0.4f, -0.8f, 0f);
-            glVertex3f(-0.4f, -0.8f, 0f);
         glEnd();
         }
 }
