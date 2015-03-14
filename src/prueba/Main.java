@@ -93,6 +93,7 @@ public class Main {
 
         int WIDTH = 500;
         int HEIGHT = 500;
+        int DEPTH = 500;
 
         // Create the window
         window = glfwCreateWindow(WIDTH, HEIGHT, "Tutorial 1", NULL, NULL);
@@ -137,17 +138,18 @@ public class Main {
         GLContext.createFromCurrent();
 
         // Set the clear color
-        glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //Background color
+        glClearColor(0.0f, 0.8f, 0.0f, 0.0f); //Background color
         //glColor3f(1f, 0f, 0f); //All shapes with this color
         
         //OpenGL is a state machine
         
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
+        float pos = 0.0f;
         while (glfwWindowShouldClose(window) == GL_FALSE) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
-            new Aeropuerto().main();
+            pos += 0.005f;
+            new Aeropuerto().main(pos);
 
             /* Swap buffers and poll Events */
             glfwSwapBuffers(window); // swap the color buffers
