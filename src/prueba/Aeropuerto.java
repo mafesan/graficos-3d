@@ -24,12 +24,13 @@ public class Aeropuerto {
      * a una en concreto aterricen, y la pista va diciendo si 
      * hay algun avion en ella.
      */
-    public static void main(String[] args) {
+    public static void main(float pos_y) {
        Fondo miPaisaje = new Fondo();
        Pista pistaMain = new Pista();
        Pista pista2 = new Pista();
        Torre torreControl = new Torre();
-       Avion miBoeing = new Avion();
+       Avion miBoeing = new Avion(0f, pos_y-1.5f, 0f);
+       
        
        //Dibujamos los elementos
        miPaisaje.Draw();
@@ -47,9 +48,12 @@ public class Aeropuerto {
        pistaMain.LongPista();
        pistaMain.EsPrincipal("Principal");
        
+       
+       
+       /*
        pista2.Draw();
        pista2.EsPrincipal("Otra");
-       
+       */
        miBoeing.TakeOff();
        miBoeing.PlaneSpeed();
        miBoeing.LandPlane();
