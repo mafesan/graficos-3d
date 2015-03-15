@@ -5,18 +5,44 @@
  */
 package java3dv3;
 
-import Utils.Matrix4f;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
-import static org.lwjgl.glfw.GLFW.*;
-import org.lwjgl.glfw.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
+import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
+import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
+import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.glfwShowWindow;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowHint;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.GLFWvidmode;
+import org.lwjgl.opengl.GL11;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glVertex3f;
 import org.lwjgl.opengl.GLContext;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -24,7 +50,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  *
  * @author Agustin
  */
-public class Tutorial7 {
+public class Tutorial1 {
     
     // We need to strongly reference callback instances.
     private GLFWErrorCallback errorCallback;
@@ -34,7 +60,7 @@ public class Tutorial7 {
     private long window;
 
     public void run() {
-        System.out.println("Hello LWJGL " + Sys.getVersion() + "!. Tutorial 7");
+        System.out.println("Hello LWJGL " + Sys.getVersion() + "!. Tutorial 1");
 
         try {
             init();
@@ -56,7 +82,7 @@ public class Tutorial7 {
         glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if (glfwInit() != GL_TRUE) {
+        if (glfwInit() != GL11.GL_TRUE) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
@@ -69,7 +95,7 @@ public class Tutorial7 {
         int HEIGHT = 500;
 
         // Create the window
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Tutorial 7", NULL, NULL);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "Tutorial 1", NULL, NULL);
         if (window == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
@@ -102,36 +128,6 @@ public class Tutorial7 {
         glfwShowWindow(window);
     }
 
-    static final String VertexShaderSrc = 
-"#version 150 core\n" +
-"\n" +
-"in vec3 position;\n" +
-"in vec3 color;\n" +
-"\n" +
-"out vec3 vertexColor;\n" +
-"\n" +
-"uniform mat4 model;\n" +
-"uniform mat4 view;\n" +
-"uniform mat4 projection;\n" +
-"\n" +
-"void main() {\n" +
-"    vertexColor = color;\n" +
-"    mat4 mvp = projection * view * model;\n" +
-"    gl_Position = mvp * vec4(position, 1.0);\n" +
-"}";
-    
-    static final String FragmentShaderSrc = 
-"#version 150 core\n" +
-"\n" +
-"in vec3 vertexColor;\n" +
-"\n" +
-"out vec4 fragColor;\n" +
-"\n" +
-"void main() {\n" +
-"    fragColor = vec4(vertexColor, 1.0);\n" +
-"}";
-    
-    
     private void loop() {
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
@@ -142,75 +138,19 @@ public class Tutorial7 {
 
         // Set the clear color
         glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-
+        glColor3f(1f, 0f, 0f);
         
-        /// Do not forget to do vertices.flip()! This is important, because passing the buffer without 
-        // flipping will crash your JVM because of a EXCEPTION_ACCESS_VIOLATION.
-        FloatBuffer vertices = BufferUtils.createFloatBuffer(3 * 6);
-            vertices.put(-0.6f).put(-0.4f).put(0f).put(1f).put(0f).put(0f);
-            vertices.put(0.6f).put(-0.4f).put(0f).put(0f).put(1f).put(0f);
-            vertices.put(0f).put(0.6f).put(0f).put(0f).put(0f).put(1f);
-            vertices.flip();
-
-        int vbo = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, vertices, GL_STATIC_DRAW);
-            
-        
-        int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, VertexShaderSrc);
-        glCompileShader(vertexShader);
-        int status = glGetShaderi(vertexShader, GL_COMPILE_STATUS);
-        if (status != GL_TRUE) {
-            throw new RuntimeException(glGetShaderInfoLog(vertexShader));
-        }
-        
-        int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, FragmentShaderSrc);
-        glCompileShader(fragmentShader);
-        status = glGetShaderi(fragmentShader, GL_COMPILE_STATUS);
-        if (status != GL_TRUE) {
-            throw new RuntimeException(glGetShaderInfoLog(vertexShader));
-        }
-
-        int shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glBindFragDataLocation(shaderProgram, 0, "fragColor");
-        glLinkProgram(shaderProgram);
-        glUseProgram(shaderProgram);
-        
-        int floatSize = 4;
-
-        int posAttrib = glGetAttribLocation(shaderProgram, "position");
-        glEnableVertexAttribArray(posAttrib);
-        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, false, 6 * floatSize, 0);
-
-        int colAttrib = glGetAttribLocation(shaderProgram, "color");
-        glEnableVertexAttribArray(colAttrib);
-        glVertexAttribPointer(colAttrib, 3, GL_FLOAT, false, 6 * floatSize, 3 * floatSize);
-        
-        
-        int uniModel = glGetUniformLocation(shaderProgram, "model");
-        Matrix4f model = new Matrix4f();
-        glUniformMatrix4(uniModel, false, model.getBuffer());
-
-        int uniView = glGetUniformLocation(shaderProgram, "view");
-        Matrix4f view = new Matrix4f();
-        glUniformMatrix4(uniView, false, view.getBuffer());
-
-        int uniProjection = glGetUniformLocation(shaderProgram, "projection");
-        float ratio = 640f / 480f;
-        Matrix4f projection = Matrix4f.orthographic(-ratio, ratio, -1f, 1f, -1f, 1f);
-        glUniformMatrix4(uniProjection, false, projection.getBuffer());
-
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (glfwWindowShouldClose(window) == GL_FALSE) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
             /* Render triangle */
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glBegin(GL_TRIANGLES);
+                glVertex3f(-0.6f, -0.4f, 0f);
+                glVertex3f(0.6f, -0.4f, 0f);
+                glVertex3f(0f, 0.6f, 0f);
+            glEnd();
 
             /* Swap buffers and poll Events */
             glfwSwapBuffers(window); // swap the color buffers
@@ -220,4 +160,8 @@ public class Tutorial7 {
             glfwPollEvents();  
         }
     }
+    public static void main(String[] args) {
+            new Tutorial1().run();
+        }
+	 
 }

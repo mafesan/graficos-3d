@@ -45,7 +45,8 @@ class Pista extends Dibujable{
             glVertex3f(0.4f, 1f, 0f);
         glEnd();
         
-        glColor3f(1f, 1f, 1f);
+        // Bordes de la pista
+        glColor3f(1f, 0.84f, 0f);
         glBegin(GL_TRIANGLE_STRIP);
             glVertex3f(-0.4f, -1f, 0f);
             glVertex3f(-0.35f, -1f, 0f);
@@ -58,6 +59,37 @@ class Pista extends Dibujable{
             glVertex3f(0.35f, 1f, 0f);
             glVertex3f(0.4f, 1f, 0f);
         glEnd();
+        
+        glColor3f(1f, 1f, 1f);
+        // Rayas de la pista
+        glBegin(GL_TRIANGLE_STRIP);
+            glVertex3f(-0.01f, -0.8f, 0f);
+            glVertex3f(0.01f, -0.8f, 0f);
+            glVertex3f(-0.01f, -0.6f, 0f);
+            glVertex3f(0.01f, -0.6f, 0f);
+        glEnd();
+        
+        glBegin(GL_TRIANGLE_STRIP);
+            glVertex3f(-0.01f, -0.4f, 0f);
+            glVertex3f(0.01f, -0.4f, 0f);
+            glVertex3f(-0.01f, -0.2f, 0f);
+            glVertex3f(0.01f, -0.2f, 0f);
+        glEnd();
+        
+        glBegin(GL_TRIANGLE_STRIP);
+            glVertex3f(-0.01f, 0.1f, 0f);
+            glVertex3f(0.01f, 0.1f, 0f);
+            glVertex3f(-0.01f, 0.3f, 0f);
+            glVertex3f(0.01f, 0.3f, 0f);
+        glEnd();
+        
+        glBegin(GL_TRIANGLE_STRIP);
+            glVertex3f(-0.01f, 0.5f, 0f);
+            glVertex3f(0.01f, 0.5f, 0f);
+            glVertex3f(-0.01f, 0.7f, 0f);
+            glVertex3f(0.01f, 0.7f, 0f);
+        glEnd();
+        
         }
     
 }
