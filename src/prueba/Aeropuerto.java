@@ -29,7 +29,7 @@ public class Aeropuerto {
     public static void main() {
        
        Dibujable dibujables[] = new Dibujable[10];
-       pos_y += 0.01;
+       pos_y += 0.0125;
        
        Fondo miPaisaje = new Fondo();
        dibujables[0] = miPaisaje;
@@ -64,6 +64,9 @@ public class Aeropuerto {
        pistaMain.LongPista();
        pistaMain.EsPrincipal("Principal");
        
+       if(pos_y > 6) {
+           pos_y -= 5.5;
+       }
        
        
        /*
