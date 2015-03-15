@@ -1,14 +1,14 @@
-int a //Variables de instancia
-final int a 
+//int a //Variables de instancia
+//final int a 
 /*
 No lo puedes cambiar una vez asignado. -->variable solo lectura (diferencia con la anterior, que no la puedes cambiar)
 */
-static int a       
+//static int a       
 /*
 static-->variables de clase, propias de una clase y no del objeto, y se puede cambiar
 */
 
-static final int a  
+//static final int a  
 /*
 variable de clase que no puede cambiar --> esto es una constante, ejemplo: constantes matemáticas
 */
@@ -59,6 +59,7 @@ SIEMPRE HAY QUE PONER A UNA VARIABLE SU ÁMBITO DE VISIBILIDAD
 
 */
 
+/*
 EJEMPLO:
 
 public class A{
@@ -69,3 +70,4 @@ public class A{
 		this.x = x;
 	}
 
+*/
