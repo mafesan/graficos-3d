@@ -46,6 +46,7 @@ public class Avion extends Dibujable{
             glVertex3f(0.04f+this.x, 0.08f+this.y, 0f+this.z);
             glVertex3f(0f+this.x, 0.16f+this.y, 0f+this.z);
         glEnd();
+        glColor3f(0.7f, 0.7f, 0.7f);
         glBegin(GL_TRIANGLE_STRIP); //Cuerpo del avion
             glVertex3f(-0.04f+this.x, -0.12f+this.y, 0f+this.z);
             glVertex3f(0.04f+this.x, -0.12f+this.y, 0f+this.z);
