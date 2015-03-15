@@ -137,7 +137,7 @@ public class Main {
         GLContext.createFromCurrent();
 
         // Set the clear color
-        glClearColor(0.0f, 0.8f, 0.0f, 0.0f); //Background color
+        glClearColor(1f, 1f, 1f, 0.0f); //Background color
         //glColor3f(1f, 0f, 0f); //All shapes with this color
         
         //OpenGL is a state machine
