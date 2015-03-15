@@ -39,10 +39,25 @@ class Pista extends Dibujable{
         System.out.println("Dibujando pista...");
         glColor3f(0.1f, 0.1f, 0.1f);
         glBegin(GL_TRIANGLE_STRIP);
-            glVertex3f(-0.4f, -0.8f, 0f);
-            glVertex3f(0.4f, -0.8f, 0f);
-            glVertex3f(-0.4f, 0.8f, 0f);
-            glVertex3f(0.4f, 0.8f, 0f);
+            glVertex3f(-0.4f, -1f, 0f);
+            glVertex3f(0.4f, -1f, 0f);
+            glVertex3f(-0.4f, 1f, 0f);
+            glVertex3f(0.4f, 1f, 0f);
+        glEnd();
+        
+        glColor3f(1f, 1f, 1f);
+        glBegin(GL_TRIANGLE_STRIP);
+            glVertex3f(-0.4f, -1f, 0f);
+            glVertex3f(-0.35f, -1f, 0f);
+            glVertex3f(-0.4f, 1f, 0f);
+            glVertex3f(-0.35f, 1f, 0f);
+        glEnd();
+        glBegin(GL_TRIANGLE_STRIP);
+            glVertex3f(0.35f, -1f, 0f);
+            glVertex3f(0.4f, -1f, 0f);
+            glVertex3f(0.35f, 1f, 0f);
+            glVertex3f(0.4f, 1f, 0f);
         glEnd();
         }
+    
 }
