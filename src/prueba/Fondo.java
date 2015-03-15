@@ -5,6 +5,13 @@
  */
 package prueba;
 
+import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glColor3f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex3f;
+
 /**
  *
  * @author Miguel Angel
@@ -16,6 +23,13 @@ class Fondo extends Dibujable {
     @Override
     public void Draw() {
         System.out.println("Dibujando fondo...");
+        glColor3f(0.0f, 0.8f, 0.0f);
+        glBegin(GL_TRIANGLE_STRIP);
+            glVertex3f(-1f, -1f, 0f);
+            glVertex3f(1f, -1f, 0f);
+            glVertex3f(-1f, 1f, 0f);
+            glVertex3f(1f, 1f, 0f);
+        glEnd();
     }
     
     public void AddElements() {
