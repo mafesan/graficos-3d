@@ -40,7 +40,7 @@ public class Avion extends Dibujable{
     @Override
     public void Draw() {
         System.out.println("Dibujando avión...");
-        glColor3f(0.5f, 0.5f, 0.5f);
+        glColor3f(0.4f, 0.4f, 0.4f);
         glBegin(GL_TRIANGLES); //Morro del avión
             glVertex3f(-0.04f+this.x, 0.08f+this.y, 0f+this.z);
             glVertex3f(0.04f+this.x, 0.08f+this.y, 0f+this.z);
@@ -53,7 +53,7 @@ public class Avion extends Dibujable{
             glVertex3f(0.04f+this.x, 0.08f+this.y, 0f+this.z);
         glEnd();
         
-        glColor3f(0f, 0.1f, 1f);
+        glColor3f(0f, 0.35f, 1f);
         glBegin(GL_TRIANGLES); //Ala izquierda
             glVertex3f(-0.16f+this.x, -0.04f+this.y, 0f+this.z);
             glVertex3f(-0.04f+this.x, 0f+this.y, 0f+this.z);
