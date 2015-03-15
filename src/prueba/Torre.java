@@ -22,12 +22,19 @@ class Torre extends Dibujable{
     @Override
     public void Draw() {
        System.out.println("Dibujando torre de control...");
-       glColor3f(0.5f, 0.4f, 0.6f);
-        glBegin(GL_TRIANGLE_STRIP);
+       glColor3f(0.3f, 0.3f, 0.3f);
+       glBegin(GL_TRIANGLE_STRIP);
             glVertex3f(-0.95f, 0.5f, 0f);
             glVertex3f(-0.6f, 0.5f, 0f);
-            glVertex3f(-0.95f, 0.8f, 0f);
-            glVertex3f(-0.6f, 0.8f, 0f);
+            glVertex3f(-0.95f, 0.9f, 0f);
+            glVertex3f(-0.6f, 0.9f, 0f);
+        glEnd();
+       glColor3f(0.8f, 0.4f, 0.2f);
+        glBegin(GL_TRIANGLE_STRIP);
+            glVertex3f(-0.85f, 0.65f, 0f);
+            glVertex3f(-0.65f, 0.65f, 0f);
+            glVertex3f(-0.85f, 0.8f, 0f);
+            glVertex3f(-0.65f, 0.8f, 0f);
         glEnd();
     }
     
