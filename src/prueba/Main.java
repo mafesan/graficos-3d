@@ -91,12 +91,11 @@ public class Main {
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
 
-        int WIDTH = 500;
-        int HEIGHT = 500;
-        int DEPTH = 500;
+        int WIDTH = 600;
+        int HEIGHT = 600;
 
         // Create the window
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Tutorial 1", NULL, NULL);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "Simulator by mghfdez", NULL, NULL);
         if (window == NULL) {
             throw new RuntimeException("Failed to create the GLFW window");
         }
@@ -145,11 +144,10 @@ public class Main {
         
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        float pos = 0.0f;
         while (glfwWindowShouldClose(window) == GL_FALSE) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-            pos += 0.005f;
-            new Aeropuerto().main(pos);
+            
+            new Aeropuerto().main();
 
             /* Swap buffers and poll Events */
             glfwSwapBuffers(window); // swap the color buffers
