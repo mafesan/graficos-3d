@@ -5,65 +5,46 @@
  */
 package airport;
 
+import Utils.Matrix4f;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
-import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
-import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
-import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
-import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
-import static org.lwjgl.glfw.GLFW.glfwShowWindow;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWvidmode;
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.glfw.GLFW.*;
+
+import org.lwjgl.glfw.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glVertex3f;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+
 import org.lwjgl.opengl.GLContext;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
  *
- * @author Agustin
+ * @author Miguel Angel Fernandez
  */
 public class Main {
     
-    // We need to strongly reference callback instances.
-    private GLFWErrorCallback errorCallback;
+    // Valor inicial de variables
+	private GLFWErrorCallback errorCallback;
     private GLFWKeyCallback keyCallback;
 
-    // The window handle
+    private static final int WIDTH = 500;
+    private static final int HEIGHT = 500;
+    public static final int FLOAT_SIZE = 4;
+    
     private long window;
-
+    private int shaderProgram;
+    private int uniModel;
+    private Dibujable dibujables[] = new Dibujable[10];
+    
     public void run() {
         System.out.println("Hello LWJGL " + Sys.getVersion() + "!. Tutorial 1");
 
         try {
-            init();
+            initGL();
             loop();
 
             // Release window and window callbacks
@@ -75,14 +56,43 @@ public class Main {
             errorCallback.release();
         }
     }
+    
+    static final String VertexShaderSrc = 
+            "#version 130\n" +
+            "\n" +
+            "   in vec3 aVertexPosition;\n" +
+            "   in vec3 aVertexColor;\n" +
+            "\n" +
+            "   out vec3 vColor;\n" +
+            "\n" +
+            "   uniform mat4 model;\n" +
+            "   uniform mat4 projection;\n" +
+            "\n" +
+            "   void main() {\n" +
+            "       vColor = aVertexColor;\n" +
+            "       mat4 mvp = projection * model;\n" +
+            "       gl_Position = mvp * vec4(aVertexPosition, 1.0);\n" +
+            "   }";
 
-    private void init() {
+    static final String FragmentShaderSrc = 
+            "#version 130\n" +
+            "\n" +
+            "   in vec3 vColor;\n" +
+            "\n" +
+            "   void main() {\n" +
+            "        gl_FragColor = vec4(vColor, 1.0);\n" +
+            "   }";
+
+    private void initGL() {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
+    	
+    	dibujables[1] = new Avion(0.4f, -0.8f, 0f);
+    	
         glfwSetErrorCallback(errorCallback = errorCallbackPrint(System.err));
 
         // Initialize GLFW. Most GLFW functions will not work before doing this.
-        if (glfwInit() != GL11.GL_TRUE) {
+        if (glfwInit() != GL_TRUE) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
@@ -90,9 +100,6 @@ public class Main {
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GL_FALSE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
-
-        int WIDTH = 600;
-        int HEIGHT = 600;
 
         // Create the window
         window = glfwCreateWindow(WIDTH, HEIGHT, "Simulator by mghfdez", NULL, NULL);
@@ -126,29 +133,61 @@ public class Main {
 
         // Make the window visible
         glfwShowWindow(window);
-    }
-
-    private void loop() {
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the ContextCapabilities instance and makes the OpenGL
-        // bindings available for use.
+        
         GLContext.createFromCurrent();
 
         // Set the clear color
-        glClearColor(1f, 1f, 1f, 0.0f); //Background color
-        //glColor3f(1f, 0f, 0f); //All shapes with this color
+        glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
         
-        //OpenGL is a state machine
+        glEnable( GL_DEPTH_TEST);
+        
+        // Compilar shaders
+        int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(vertexShader, VertexShaderSrc);
+        glCompileShader(vertexShader);
+        int status = glGetShaderi(vertexShader, GL_COMPILE_STATUS);
+        if (status != GL_TRUE) {
+            throw new RuntimeException(glGetShaderInfoLog(vertexShader));
+        }
+        
+        int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+        glShaderSource(fragmentShader, FragmentShaderSrc);
+        glCompileShader(fragmentShader);
+        status = glGetShaderi(fragmentShader, GL_COMPILE_STATUS);
+        if (status != GL_TRUE) {
+            throw new RuntimeException(glGetShaderInfoLog(vertexShader));
+        }
+
+        shaderProgram = glCreateProgram();
+        glAttachShader(shaderProgram, vertexShader);
+        glAttachShader(shaderProgram, fragmentShader);
+        glLinkProgram(shaderProgram);
+        glUseProgram(shaderProgram);
+    }
+
+    private void loop() {
+    
+        //OpenGL es una maquina de estados
+    	/// Create a FloatBuffer of vertices
+        /// Do not forget to do vertices.flip()! This is important, because passing the buffer without 
+        // flipping will crash your JVM because of a EXCEPTION_ACCESS_VIOLATION.
+        
+    	uniModel = glGetUniformLocation(shaderProgram, "model");
+        
+        int uniProjection = glGetUniformLocation(shaderProgram, "projection");
+        float ratio = (float)WIDTH / (float)HEIGHT;
+        Matrix4f projection = Matrix4f.perspective(60, ratio, 0.1f, 100.0f );
+        glUniformMatrix4(uniProjection, false, projection.getBuffer());
         
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
+        Aeropuerto aeropuerto = new Aeropuerto();
+        
         while (glfwWindowShouldClose(window) == GL_FALSE) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             
-            new Aeropuerto().main();
-
+            
+            dibujables[1].Draw(shaderProgram, uniModel);
             /* Swap buffers and poll Events */
             glfwSwapBuffers(window); // swap the color buffers
 

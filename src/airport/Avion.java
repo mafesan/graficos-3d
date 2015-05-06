@@ -5,12 +5,21 @@
  */
 package airport;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex3f;
+import Utils.Matrix4f;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.Sys;
+import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
+import static org.lwjgl.glfw.GLFW.*;
+import org.lwjgl.glfw.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+
+import org.lwjgl.opengl.GLContext;
+import static org.lwjgl.system.MemoryUtil.NULL;
+
 /**
  *
  * @author MiguelAngel
@@ -19,6 +28,11 @@ public class Avion extends Dibujable{
     float x, y, z;
     int speed = 600;
     int num_people;
+    private float count = 0;
+    private float count2 = 0;
+    private float count3 = 0;
+    private int vbo_v;
+    private int vbo_c;
 
     public Avion(float x, float y, float z){
         this.x = x;
@@ -37,48 +51,117 @@ public class Avion extends Dibujable{
         System.out.println("La velocidad del avion es: " + speed + " km/h.");
     }
 
+    float[] vertices = new float[]
+            {
+                  1.0f,  1.0f,  1.0f ,         // Top Right Of The Quad (Front)
+                 -1.0f,  1.0f,  1.0f ,         // Top Left Of The Quad (Front)
+                 -1.0f, -1.0f,  1.0f ,         // Bottom Left Of The Quad (Front)
+                  1.0f, -1.0f,  1.0f ,         // Bottom Right Of The Quad (Front)
+                  
+                  1.0f, 1.0f, -1.0f ,          // Top Right Of The Quad (Top)
+                 -1.0f, 1.0f, -1.0f ,          // Top Left Of The Quad (Top)
+                 -1.0f, 1.0f,  1.0f ,          // Bottom Left Of The Quad (Top)
+                  1.0f, 1.0f,  1.0f ,          // Bottom Right Of The Quad (Top)
+            
+                  1.0f, -1.0f,  1.0f ,         // Top Right Of The Quad (Bottom)
+                 -1.0f, -1.0f,  1.0f ,         // Top Left Of The Quad (Bottom)
+                 -1.0f, -1.0f, -1.0f ,         // Bottom Left Of The Quad (Bottom)
+                  1.0f, -1.0f, -1.0f ,         // Bottom Right Of The Quad (Bottom)
+            
+                  1.0f, -1.0f, -1.0f ,         // Bottom Left Of The Quad (Back)
+                 -1.0f, -1.0f, -1.0f ,         // Bottom Right Of The Quad (Back)
+                 -1.0f,  1.0f, -1.0f ,         // Top Right Of The Quad (Back)
+                  1.0f,  1.0f, -1.0f ,         // Top Left Of The Quad (Back)
+            
+                 -1.0f,  1.0f,  1.0f ,         // Top Right Of The Quad (Left)
+                 -1.0f,  1.0f, -1.0f ,         // Top Left Of The Quad (Left)
+                 -1.0f, -1.0f, -1.0f ,         // Bottom Left Of The Quad (Left)
+                 -1.0f, -1.0f,  1.0f ,         // Bottom Right Of The Quad (Left)
+
+                  1.0f,  1.0f, -1.0f ,         // Top Right Of The Quad (Right)
+                  1.0f,  1.0f,  1.0f ,         // Top Left Of The Quad (Right)
+                  1.0f, -1.0f,  1.0f ,         // Bottom Left Of The Quad (Right)
+                  1.0f, -1.0f, -1.0f           // Bottom Right Of The Quad (Right)
+            };
+    
+    //Definimos los colores de los vertices
+    float[] colors = new float[]
+            {
+                  1.0f,  1.0f,  1.0f ,         // Top Right Of The Quad (Front)
+                  0.0f,  0.0f,  0.0f ,         // Top Left Of The Quad (Front)
+                  0.0f,  0.0f,  1.0f ,         // Bottom Left Of The Quad (Front)
+                  0.0f,  0.0f,  1.0f ,         // Bottom Right Of The Quad (Front)
+                  
+                  1.0f, 1.0f,  1.0f ,          // Top Right Of The Quad (Top)
+                  0.0f, 0.0f,  0.0f ,          // Top Left Of The Quad (Top)
+                  0.0f, 0.0f,  1.0f ,          // Bottom Left Of The Quad (Top)
+                  0.0f, 0.0f,  1.0f ,          // Bottom Right Of The Quad (Top)
+                  
+                  1.0f,  1.0f,  1.0f ,         // Top Right Of The Quad (Bottom)
+                  0.0f,  0.0f,  0.0f ,         // Top Left Of The Quad (Bottom)
+                  0.0f,  0.0f,  1.0f ,         // Bottom Left Of The Quad (Bottom)
+                  0.0f,  0.0f,  1.0f ,         // Bottom Right Of The Quad (Bottom)
+            
+                  1.0f,  1.0f,  1.0f ,         // Bottom Left Of The Quad (Back)
+                  0.0f,  0.0f,  0.0f ,         // Bottom Right Of The Quad (Back)
+                  0.0f,  0.0f,  1.0f ,         // Top Right Of The Quad (Back)
+                  0.0f,  0.0f,  1.0f ,         // Top Left Of The Quad (Back)
+            
+                  1.0f,  1.0f,  1.0f ,         // Top Right Of The Quad (Left)
+                  0.0f,  0.0f,  0.0f ,         // Top Left Of The Quad (Left)
+                  0.0f,  0.0f,  1.0f ,         // Bottom Left Of The Quad (Left)
+                  0.0f,  0.0f,  1.0f ,         // Bottom Right Of The Quad (Left)
+
+                  1.0f,  1.0f,  1.0f ,         // Top Right Of The Quad (Right)
+                  0.0f,  0.0f,  0.0f ,         // Top Left Of The Quad (Right)
+                  0.0f,  0.0f,  1.0f ,         // Bottom Left Of The Quad (Right)
+                  0.0f,  0.0f,  1.0f           // Bottom Right Of The Quad (Right)
+            };
     @Override
-    public void Draw() {
-        System.out.println("Dibujando avión...");
-        glColor3f(0.4f, 0.4f, 0.4f);
-        glBegin(GL_TRIANGLES); //Morro del avión
-            glVertex3f(-0.04f+this.x, 0.08f+this.y, 0f+this.z);
-            glVertex3f(0.04f+this.x, 0.08f+this.y, 0f+this.z);
-            glVertex3f(0f+this.x, 0.16f+this.y, 0f+this.z);
-        glEnd();
-        glColor3f(0.7f, 0.7f, 0.7f);
-        glBegin(GL_TRIANGLE_STRIP); //Cuerpo del avion
-            glVertex3f(-0.04f+this.x, -0.12f+this.y, 0f+this.z);
-            glVertex3f(0.04f+this.x, -0.12f+this.y, 0f+this.z);
-            glVertex3f(-0.04f+this.x, 0.08f+this.y, 0f+this.z);
-            glVertex3f(0.04f+this.x, 0.08f+this.y, 0f+this.z);
-        glEnd();
+    public void Draw(int shaderProg, int unimodel) {
+        //System.out.println("Dibujando avión...");
+    	count += 0.01f;
+    	count2 += 0.0023f;
+    	count3 += 0.02f;
+        // Definimos los vertices
+        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
+        verticesBuffer.put(vertices).flip();
+
+        vbo_v = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_v);
+        glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
+ 
+        int posAttrib = glGetAttribLocation(shaderProg, "aVertexPosition");
+        glEnableVertexAttribArray(posAttrib);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_v);
         
-        glColor3f(0f, 0.35f, 1f);
-        glBegin(GL_TRIANGLES); //Ala izquierda
-            glVertex3f(-0.16f+this.x, -0.04f+this.y, 0f+this.z);
-            glVertex3f(-0.04f+this.x, 0f+this.y, 0f+this.z);
-            glVertex3f(-0.04f+this.x, 0.08f+this.y, 0f+this.z);
-        glEnd();
-        glBegin(GL_TRIANGLES); //Ala derecha
-            glVertex3f(0.04f+this.x, 0f+this.y, 0f+this.z);
-            glVertex3f(0.16f+this.x, -0.04f+this.y, 0f+this.z);
-            glVertex3f(0.04f+this.x, 0.08f+this.y, 0f+this.z);
-        glEnd();
-        glColor3f(1f, 0f, 0f);
-        glBegin(GL_TRIANGLES); //Cola - parte 1
-            glVertex3f(-0.02f+this.x, -0.16f+this.y, 0f+this.z);
-            glVertex3f(-0.04f+this.x, -0.12f+this.y, 0f+this.z);
-            glVertex3f(0f+this.x, -0.12f+this.y, 0f+this.z);
-        glEnd();
-        glBegin(GL_TRIANGLES); //Cola - parte 2
-            glVertex3f(0.02f+this.x, -0.16f+this.y, 0f+this.z);
-            glVertex3f(0f+this.x, -0.12f+this.y, 0f+this.z);
-            glVertex3f(0.04f+this.x, -0.12f+this.y, 0f+this.z);
-        glEnd();
+        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, false, 0, 0);      
+        
+        FloatBuffer colorsBuffer = BufferUtils.createFloatBuffer(colors.length);
+        colorsBuffer.put(colors).flip();
+ 
+        vbo_c = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_c);
+        glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
+
+        int vertexColorAttribute = glGetAttribLocation(shaderProg, "aVertexColor");
+        glEnableVertexAttribArray(vertexColorAttribute);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_c);
+        glVertexAttribPointer(vertexColorAttribute, 3, GL_FLOAT, false, 0, 0);
+        
+        float posX = -1 + (float)Math.cos(count);
+        float posY = -1 + (float)Math.sin(count2);
+        float posZ = -1 + (float)Math.sin(count3);
+        Matrix4f model = Matrix4f.rotate(200, 0.5f, 1f, 1f);
+        model = Matrix4f.scale(0.4f, 0.4f, 0.4f).multiply(model);
+        model = Matrix4f.translate(posX, posY, -7).multiply(model);
+        glUniformMatrix4(unimodel, false, model.getBuffer());
+        glDrawArrays(GL_QUADS, 0, 4*6);
+
     }
     
 }
+
 
 /*Segun la tarjeta con el código que ha subido Agustinm
 --> si no funciona: 

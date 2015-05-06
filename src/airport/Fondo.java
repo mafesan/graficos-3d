@@ -19,8 +19,10 @@ class Fondo extends Dibujable {
     String elementos;
     String tipoClima = "Lluvioso";
    
+    int num1 = 1;
+    int num2 = 2; 
     @Override
-    public void Draw() {
+    public void Draw(num1, num2) {
         System.out.println("Dibujando fondo...");
         glColor3f(0.0f, 0.8f, 0.0f);
         glBegin(GL_TRIANGLE_STRIP);
