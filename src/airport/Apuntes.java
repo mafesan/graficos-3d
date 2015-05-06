@@ -1,3 +1,5 @@
+package airport;
+
 //int a //Variables de instancia
 //final int a 
 /*
@@ -69,5 +71,22 @@ public class A{
 		// x = x; esto es lo mismo, pero queda mal
 		this.x = x;
 	}
+--------- 18/03/2015 ---------
+
+Hay que programar VertexShaderSrc y FragmentShaderSrc
+
+El color lo coge desde FragmentShader --> Hay que decirle a FS que lo coja
+del buffer (ver cambios del tutorial4 al tutrial 5
+-Preparar los buffers
+-Preparar los shaders --es lo que menos va a cambiar a lo largo del programa
+-Conectarlos --a cada dibujo tendré que estar conectando y desconectando
+
+(en el código aparece en otro orden)
+
+"vColor = vec4(aVertexColor, 1.0);\n"
+
+cuando añadimos '.b o .rg, estamos cogiendo componentes de colores, 
+y con vertexPosition.xy en x e y 
+¿utilidad? el mismo color, mas claro o mas oscuro segun está mas cerca o lejos
 
 */
