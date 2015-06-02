@@ -13,4 +13,5 @@ public abstract class Dibujable {
     int x, y, z;
     
     public abstract void Draw(int shaderProgram, int uniModel);
+    public abstract void Prepare(int shaderProgram, int uniModel);
 }

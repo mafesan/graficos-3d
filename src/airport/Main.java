@@ -6,6 +6,7 @@
 package airport;
 
 import Utils.Matrix4f;
+import Utils.FPCameraController;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
@@ -14,6 +15,7 @@ import static org.lwjgl.glfw.Callbacks.errorCallbackPrint;
 import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.glfw.*;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -30,15 +32,24 @@ public class Main {
     // Valor inicial de variables
 	private GLFWErrorCallback errorCallback;
     private GLFWKeyCallback keyCallback;
+    private GLFWCursorPosCallback cpCallback;
 
-    private static final int WIDTH = 500;
-    private static final int HEIGHT = 500;
+    private static final int WIDTH = 700;
+    private static final int HEIGHT = 700;
     public static final int FLOAT_SIZE = 4;
     
     private long window;
     private int shaderProgram;
     private int uniModel;
+    private int uniView;
     private Dibujable dibujables[] = new Dibujable[10];
+    
+    private FPCameraController camera = new FPCameraController(-5, -5, -15);
+    private float deltaTime = 0.0f; //length of frame
+    private double lastFrame; // when the last frame was
+    
+    private float movementSpeed = 5.0f; //move 10 units per second
+    private double lastX = 400, lastY = 300;
     
     public void run() {
         System.out.println("Hello LWJGL " + Sys.getVersion() + "!. Tutorial 1");
@@ -63,21 +74,22 @@ public class Main {
             "   in vec3 aVertexPosition;\n" +
             "   in vec3 aVertexColor;\n" +
             "\n" +
-            "   out vec3 vColor;\n" +
+            "   varying vec3 vColor;\n" +
             "\n" +
             "   uniform mat4 model;\n" +
+            "   uniform mat4 view;\n" +
             "   uniform mat4 projection;\n" +
             "\n" +
             "   void main() {\n" +
             "       vColor = aVertexColor;\n" +
-            "       mat4 mvp = projection * model;\n" +
+            "       mat4 mvp = projection * view * model;\n" +
             "       gl_Position = mvp * vec4(aVertexPosition, 1.0);\n" +
             "   }";
 
     static final String FragmentShaderSrc = 
-            "#version 130\n" +
+            "#version 110\n" +
             "\n" +
-            "   in vec3 vColor;\n" +
+            "   varying vec3 vColor;\n" +
             "\n" +
             "   void main() {\n" +
             "        gl_FragColor = vec4(vColor, 1.0);\n" +
@@ -111,11 +123,55 @@ public class Main {
         glfwSetKeyCallback(window, keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
-                if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
+            	if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                     glfwSetWindowShouldClose(window, GL_TRUE); // We will detect this in our rendering loop
+                    return;
+                }
+               
+                //when passing in the distance to move
+                //we times the movementSpeed with dt this is a time scale
+                //so if its a slow frame u move more then a fast frame
+                //so on a slow computer you move just as fast as on a fast computer
+                if (key == GLFW_KEY_W)//move forward
+                {
+                    camera.walkForward(movementSpeed*deltaTime);
+                }
+                if (key == GLFW_KEY_S)//move backwards
+                {
+                    camera.walkBackwards(movementSpeed*deltaTime);
+                }
+                if (key == GLFW_KEY_A)//strafe left
+                {
+                    camera.strafeLeft(movementSpeed*deltaTime);
+                }
+                if (key == GLFW_KEY_D)//strafe right
+                {
+                    camera.strafeRight(movementSpeed*deltaTime);
                 }
             }
         });
+        
+        glfwSetCursorPosCallback(window, cpCallback = new GLFWCursorPosCallback() {
+            private boolean firstMouse = true;
+            
+			@Override
+			public void invoke(long window, double xpos, double ypos) {
+				if(firstMouse)
+			                    {
+			                        lastX = xpos;
+			                        lastY = ypos;
+			                        firstMouse = false;
+			                    }
+			
+			                    float xoffset = (float)(xpos - lastX);
+			                    float yoffset = (float)(ypos - lastY); 
+			
+			                    lastX = xpos;
+			                    lastY = ypos;
+			
+			                    camera.ProcessMouseMovement(xoffset, yoffset);
+			}
+			});
 
         // Get the resolution of the primary monitor
         ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -139,7 +195,7 @@ public class Main {
         // Set the clear color
         glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
         
-        glEnable( GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
         
         // Compilar shaders
         int vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -147,7 +203,7 @@ public class Main {
         glCompileShader(vertexShader);
         int status = glGetShaderi(vertexShader, GL_COMPILE_STATUS);
         if (status != GL_TRUE) {
-            throw new RuntimeException(glGetShaderInfoLog(vertexShader));
+        	throw new RuntimeException(glGetShaderInfoLog(vertexShader));
         }
         
         int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -171,31 +227,44 @@ public class Main {
     	/// Create a FloatBuffer of vertices
         /// Do not forget to do vertices.flip()! This is important, because passing the buffer without 
         // flipping will crash your JVM because of a EXCEPTION_ACCESS_VIOLATION.
+    	Aeropuerto aeropuerto = new Aeropuerto();
+        dibujables[1].Prepare(shaderProgram, uniModel);
         
-    	uniModel = glGetUniformLocation(shaderProgram, "model");
+        uniModel = glGetUniformLocation(shaderProgram, "model");
         
         int uniProjection = glGetUniformLocation(shaderProgram, "projection");
         float ratio = (float)WIDTH / (float)HEIGHT;
         Matrix4f projection = Matrix4f.perspective(60, ratio, 0.1f, 100.0f );
         glUniformMatrix4(uniProjection, false, projection.getBuffer());
         
+        uniView = glGetUniformLocation(shaderProgram, "view");
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
-        Aeropuerto aeropuerto = new Aeropuerto();
         
-        while (glfwWindowShouldClose(window) == GL_FALSE) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-            
-            
-            dibujables[1].Draw(shaderProgram, uniModel);
-            /* Swap buffers and poll Events */
-            glfwSwapBuffers(window); // swap the color buffers
-
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
-            glfwPollEvents();  
-        }
-    }
+        
+  	    while (glfwWindowShouldClose(window) == GL_FALSE) {
+	        
+	        double currentFrame = glfwGetTime();
+	        deltaTime = (float)(currentFrame - lastFrame);
+	        lastFrame = currentFrame;
+	        
+	        // Poll for window events. The key callback above will only be
+	        // invoked during this call.
+	        glfwPollEvents();
+	        
+	        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+	
+	        /* update camera position */
+	        Matrix4f view = camera.lookThrough();
+	        glUniformMatrix4(uniView, false, view.getBuffer());
+	        
+	        /* Render models */
+	        dibujables[1].Draw(shaderProgram, uniModel);
+	        
+	        /* Swap buffers and poll Events */
+	        glfwSwapBuffers(window); // swap the color buffers  
+	    }
+	}
     public static void main(String[] args) {
             new Main().run();
         }

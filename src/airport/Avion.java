@@ -117,17 +117,23 @@ public class Avion extends Dibujable{
                   0.0f,  0.0f,  1.0f ,         // Bottom Left Of The Quad (Right)
                   0.0f,  0.0f,  1.0f           // Bottom Right Of The Quad (Right)
             };
+    
+    public void Prepare(int shaderProg, int unimodel){
+    	// Definimos los vertices
+    	System.out.println("Preparando avión...");
+      
+    }
     @Override
     public void Draw(int shaderProg, int unimodel) {
         //System.out.println("Dibujando avión...");
-    	count += 0.01f;
-    	count2 += 0.0023f;
-    	count3 += 0.02f;
-        // Definimos los vertices
-        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
+    	count += 0.03f;
+    	count2 += 0.01f;
+    	count3 += 0.06f;
+        
+    	FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
         verticesBuffer.put(vertices).flip();
 
-        vbo_v = glGenBuffers();
+        int vbo_v = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vbo_v);
         glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
  
@@ -135,12 +141,12 @@ public class Avion extends Dibujable{
         glEnableVertexAttribArray(posAttrib);
         glBindBuffer(GL_ARRAY_BUFFER, vbo_v);
         
-        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, false, 0, 0);      
+        glVertexAttribPointer(posAttrib, 3, GL_FLOAT, false, 0, 0);
         
         FloatBuffer colorsBuffer = BufferUtils.createFloatBuffer(colors.length);
         colorsBuffer.put(colors).flip();
  
-        vbo_c = glGenBuffers();
+        int vbo_c = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vbo_c);
         glBufferData(GL_ARRAY_BUFFER, colorsBuffer, GL_STATIC_DRAW);
 
@@ -148,16 +154,16 @@ public class Avion extends Dibujable{
         glEnableVertexAttribArray(vertexColorAttribute);
         glBindBuffer(GL_ARRAY_BUFFER, vbo_c);
         glVertexAttribPointer(vertexColorAttribute, 3, GL_FLOAT, false, 0, 0);
+        float posX = 1 + (float)Math.cos(count);
+        float posY = 1 + (float)Math.sin(count2);
+        float posZ = -7 + (float)Math.sin(count3);
         
-        float posX = -1 + (float)Math.cos(count);
-        float posY = -1 + (float)Math.sin(count2);
-        float posZ = -1 + (float)Math.sin(count3);
-        Matrix4f model = Matrix4f.rotate(200, 0.5f, 1f, 1f);
+        Matrix4f model = Matrix4f.rotate(200, 0.7f, 1f, 1f);
         model = Matrix4f.scale(0.4f, 0.4f, 0.4f).multiply(model);
-        model = Matrix4f.translate(posX, posY, -7).multiply(model);
+        model = Matrix4f.translate(posX, posY, posZ).multiply(model);
         glUniformMatrix4(unimodel, false, model.getBuffer());
         glDrawArrays(GL_QUADS, 0, 4*6);
-
+        
     }
     
 }
