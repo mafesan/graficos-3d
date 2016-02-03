@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ahorcado</title>
+</head>
+<body>
+
+<h1>El Ahorcado</h1>
+<h3>by mghfdez using Javascript</h3>
+<img id="myImage" src="no_ahorcado.jpg" width="300" height="240">
+
+<h4>Palabra:</h4>
+<p id=empty_word></p>
+<p><b><u>Introduce una letra:</u></b> </p>
+
+<input id="numb">
+
+<button type="button" onclick="checkValue()">Comprobar</button>
+
+<p id="demo"></p>
+
+<p id="result"></p>
+<p> <b>Intentos que te quedan:</b> </p>
+<p id="intentos"></p>
+<p id="usadas"></p>
+
+<script>
+var palabra = "galaxia"
+var array_palabra = palabra.split("");
+var intentos = 6;//array_palabra.length;
+var letras_usadas = [];
+var letras_acertadas = [];
+var posiciones_acertadas = [];
+var array_final = [];
+
+function drawLines(){
+    var line = "";
+    if (letras_acertadas.length > 0){
+      line = "";
+      for (var k = 0; k < posiciones_acertadas.length; k++){
+        array_final[posiciones_acertadas[k]] = array_palabra[posiciones_acertadas[k]];
+      }
+      for (var l = 0; l < array_final.length; l++){
+        line = line + array_final[l] + " ";
+      }
+    } else {
+      line = "";
+      for (var i = 0; i < array_palabra.length; i++){
+          line  = line + "_ ";
+          mystr = "_";
+          array_final.push(mystr);
+      }
+    }
+
+    document.getElementById("empty_word").innerHTML = line;
+}
+function changeImage() {
+    var image = document.getElementById('myImage');
+
+    if (image.src.match("no")) {
+        image.src = "si_ahorcado.png";
+    } else {
+        image.src = "no_ahorcado.jpg";
+    }
+}
+
+function restarIntento(){
+    if (intentos > 0){
+        if (intentos == 1){
+            changeImage();
+        }
+    intentos = intentos - 1;
+    } else {
+    confirm("Te has quedado sin vidas. Intenta de nuevo.");
+    intentos = 6;
+    }
+
+}
+
+function checkValue(){
+    var x, text;
+
+    x = document.getElementById("numb").value;
+
+    if (isNaN(x) && x.length === 1) {
+        text = "Letra introducida: " + x;
+        letrasPalabra(x);
+    } else {
+        text = "Eso no parece una letra. Intentalo de nuevo.";
+    }
+    document.getElementById("demo").innerHTML = text;
+    document.getElementById("intentos").innerHTML = intentos.toString();
+}
+
+function letrasPalabra(letra){
+    var respuesta;
+    var acertadas = [];
+    var counter = 0;
+    for (var i = 0; i < array_palabra.length; i++) {
+        if(letra === array_palabra[i]){
+            acertadas.push(letra);
+            letras_acertadas.push(letra);
+            posiciones_acertadas.push(i);
+            counter++;
+        }
+    }
+    letras_usadas.push(letra);
+    respuesta = "<b>Has acertado " + acertadas.length + " letras.</b> " + acertadas
+    document.getElementById("result").innerHTML = respuesta;
+    lusadas = "<b>Has usado las siguientes letras: </b>"
+    document.getElementById("usadas").innerHTML = lusadas + letras_usadas.join();
+    if (acertadas.length === 0){
+        restarIntento();
+    }
+    posiciones_acertadas.sort();
+    drawLines();
+
+}
+
+</script>
+
+</body>
+</html>

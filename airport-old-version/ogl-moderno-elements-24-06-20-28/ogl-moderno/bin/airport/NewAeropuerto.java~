@@ -1,0 +1,88 @@
+* To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ATCSim;
+
+import ATCDisplay.ATCDFlight;
+import Utils.*;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.util.Iterator;
+import java.util.List;
+
+import org.lwjgl.BufferUtils;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+ 
+/**
+ *
+ * @author Paco
+ */
+public class Airport implements Drawable
+{
+    private ShaderProgram shaderProgram;
+    private final OpenGLHelper openGLHelper = new OpenGLHelper("Airport", new FPCameraControllerA(-5, -5, -15));
+
+    
+    
+    private Fondo miPaisaje;
+    private Torre torreControl;
+    private Pista pistaMain;
+    private Avion miBoeing;
+    private Suelo miSuelo;
+
+    
+    public void run() {
+
+    	
+        openGLHelper.initGL("VS_Texture.vs", "FS_Texture.fs");
+        initObjects();
+        prepareBuffers();
+        openGLHelper.run(this);
+    }
+
+    private void initObjects() {
+    	  shaderProgram = openGLHelper.getShaderProgram();
+          
+    	  
+    	  
+          Avion miBoeing = new Avion(0.4f, -0.8f, 0f);
+          Fondo miPaisaje = new Fondo();
+          Pista pistaMain = new Pista();
+          Torre torreControl = new Torre();
+          Suelo miSuelo = new Suelo();
+          
+	}
+
+    private void prepareBuffers() {
+        shaderProgram = openGLHelper.getShaderProgram();              
+        
+    }
+
+    @Override
+    public void draw()
+    {
+        /* Render a model */
+        drawSomeModel();
+    }
+
+ 
+    private void drawSomeModel() {
+    	
+    	miSuelo.draw(openGLHelper); 
+        torreControl.draw(openGLHelper); 
+        pistaMain.draw(openGLHelper); 
+        miBoeing.draw(openGLHelper);
+             
+       
+    }
+
+    public static void main(String[] args) {
+        new Airport().run();
+    }
+
+}
+
