@@ -16,4 +16,29 @@ var obj = {
 }
 
 obj.increment(); //Method Invocation Pattern
+---------------------------------------------------
+
+// Una funcion a traves de new siempre devuelve algo (si no devuelve algo de tipo objeto, devuelve this, y si no, devuelve ese objeto).
+
+en programa 6, si devuelves 123 con return habiendo llamado la funcion con un new, devuelve el objeto (this), obviando 123.
+
+--------------------------------------------------
+
+en programa 8b, apply(off8, array); le aplica la lista de argumentos a una funcion que no esta en el objeto off8
+
+---------------------------------
+funciones con numero ilimitado de argumentos
+
+----------------------------
+closures
+
+puedes hacer funciones que devulelva un objeto con dos metodos.
+captura la pila de otra funcion y la usa.
+
+--------------------------------
+ejecución en cascada: 
+concatenar llamadas devolviendo this
+---------------------
+currifying (curryficacion, calculo lambda)
+dejar definida una funcion para llamarla mas adelante
 
